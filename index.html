@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#162822"><meta name="description" content="Register the ink layers and pull six hand-illustrated prints.">
+  <title>Ink Register · The Pocket Print Shop</title><link rel="icon" href="icon.svg"><style>:root{color-scheme:dark;--base:#192c25;--panel:#253a31;--ink:#f3e5c9;--muted:#aebfaf;--accent:#f0ad72;--line:#576c5d;font:15px/1.4 system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 50% 20%,#334b3d,#14211d 78%);color:var(--ink)}
+.shop{width:min(100%,540px);margin:auto;padding:12px max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+header,.ticket,footer,.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+header{padding:7px 1px 12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px}.brand svg{width:35px;height:35px;flex:none}
+.brand span,small,.readout,footer{font:700 10px/1.4 ui-monospace,monospace;letter-spacing:.12em;color:var(--muted)}
+h1,h2,p{margin:0}h1{font-size:clamp(18px,6vw,30px);font-weight:950;letter-spacing:-.045em;line-height:1.05}
+h2{font:700 clamp(24px,7vw,35px)/1 Georgia,serif;letter-spacing:-.04em}
+.ticket{margin:12px 0 9px}.ticket h2{margin-top:4px}
+button{min-height:44px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(#374c40,#293c33);color:var(--ink);font:700 12px/1.1 inherit;font-family:inherit;font-size:12px;font-weight:750;padding:0 10px;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+button:disabled{opacity:.53;cursor:default}button:active:not(:disabled){filter:brightness(1.18);transform:translateY(1px)}button:focus-visible{outline:2px solid #ffbd7b;outline-offset:2px}
+.frame{position:relative;isolation:isolate;width:min(100%,max(235px,calc((100dvh - 306px)*1.0566)));margin-inline:auto;border:1px solid #69776a;border-radius:13px;overflow:hidden;background:#192e27;box-shadow:0 11px 24px #0a171a66}
+canvas{display:block;width:100%;aspect-ratio:560/530;touch-action:none;cursor:grab}
+canvas:active{cursor:grabbing}.readout{pointer-events:none;position:absolute;top:8px;left:11px;right:11px;display:flex;align-items:center;justify-content:space-between;color:#e6e9d5}
+.readout strong{padding:3px 7px;border:1px solid #a3ab8b80;border-radius:5px;color:#ffca8b;background:#13251dcc;font-size:13px}
+#notice{position:absolute;bottom:10px;left:12px;right:12px;text-align:center;pointer-events:none;font-weight:850;font-size:12px;color:#ffddae;text-shadow:0 2px 3px #15221a}
+.console{padding:10px 0 7px}#tip{min-height:19px;color:#d6ddc6;font-size:12px;margin:0 0 7px}
+.control-row,.actions{display:grid;gap:5px}.control-row{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:6px}
+.control-row button{padding:0;font-size:21px}
+.actions{grid-template-columns:65px 1fr 62px}.primary{background:linear-gradient(#ffc88e,#e7a266);color:#302519;border-color:#ffc898;font-size:15px}
+[aria-pressed=true]{background:#536d4b}footer{padding:4px 0 0;border-top:1px solid var(--line)}
+dialog{width:min(94%,470px);max-height:88dvh;overflow:auto;background:#20362c;color:var(--ink);border:1px solid #a29370;border-radius:14px;padding:15px;box-shadow:0 15px 50px #07110c}dialog::backdrop{background:#0d1c16d9}
+#editions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}#editions button{text-align:left;white-space:normal;min-height:60px}#editions small{display:block;margin-bottom:4px}#hostRewards{margin-top:12px;font-size:12px}
+.brass .frame{border-color:#e3bb76}.brass .readout strong{background:#493721}
+@media (orientation:landscape) and (max-height:590px){
+  .shop{width:min(100%,780px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:8px 14px;align-items:start}
+  header{grid-column:1/-1;padding:0 0 6px}.frame{grid-column:1;grid-row:2/5;width:min(100%,calc((100dvh - 76px)*1.0566));justify-self:center}.ticket,.console,footer{grid-column:2;margin:0}.ticket h2{font-size:25px}.console{padding-top:0}
+}
+@media (max-width:340px){.shop{padding-left:9px;padding-right:9px}.brand span{letter-spacing:.06em}.brand svg{width:29px}header button,.ticket button{padding:0 8px}}
+</style>
+</head>
+<body>
+<main class="shop" aria-label="Ink Register">
+  <header><div class="brand"><svg viewBox="0 0 36 36" aria-hidden="true"><path fill="#d9985c" d="M5 8h19v19H5z"/><path fill="#ede1bd" d="M11 4h20v19H11z"/><path stroke="#17382d" stroke-width="2" fill="none" d="M16 13h10m-5-5v10"/></svg><div><span>THE POCKET PRINT SHOP</span><h1>INK REGISTER</h1></div></div><button id="sound" aria-label="Toggle sound">Sound on</button></header>
+  <section class="ticket"><div><small id="edition">EDITION 01 / 06</small><h2 id="job">Night Ferry</h2></div><button id="archive">Print archive</button></section>
+  <div class="frame">
+    <canvas id="press" width="560" height="530" aria-label="Drag the colored film to align its marks with the paper."></canvas>
+    <div class="readout"><span id="film">FILM 1 / 2</span><strong id="accuracy">72%</strong></div>
+    <p id="notice" role="status" aria-live="polite"></p>
+  </div>
+  <section class="console">
+    <p id="tip">Drag the film until the crosshairs overlap.</p>
+    <div class="control-row" id="controls">
+      <button data-move="left" aria-label="Shift left">←</button><button data-move="up" aria-label="Shift up">↑</button>
+      <button data-move="down" aria-label="Shift down">↓</button><button data-move="right" aria-label="Shift right">→</button>
+      <button data-move="ccw" aria-label="Rotate counterclockwise">↶</button><button data-move="cw" aria-label="Rotate clockwise">↷</button>
+    </div>
+    <div class="actions"><button id="guide" aria-pressed="false">Guide</button><button id="print" class="primary">Pull print</button><button id="reset" aria-label="Restart edition">Reset</button></div>
+  </section>
+  <footer><span id="count">0 / 6 EDITIONS PRINTED</span><span>EST. 1974</span></footer>
+</main>
+<dialog id="library" aria-labelledby="libraryTitle"><div class="dialog-head"><h2 id="libraryTitle">Print archive</h2><button id="closeArchive" aria-label="Close archive">✕</button></div><div id="editions"></div><p id="hostRewards" hidden></p></dialog>
+<script>(()=>{
+const C=(()=>{
+
+const KEY = 'ink-register-v1';
+const JOBS = [
+  {name:'Night Ferry', subtitle:'BAY SERVICE / 06:40', ink:['#177e88','#e26b49'], offsets:[[18,-14,0],[-17,12,0]]},
+  {name:'Peak Line', subtitle:'ALPINE RAIL / EST. 1936', ink:['#22786f','#d4823e'], offsets:[[-21,16,0],[19,-15,-7]]},
+  {name:'After Hours', subtitle:'LIVE JAZZ / FRIDAY 22:00', ink:['#6953ad','#ec6954'], offsets:[[18,14,8],[-17,-12,-9]]},
+  {name:'Greenhouse', subtitle:'GLASSHOUSE / BOTANICAL STUDIES', ink:['#42885b','#db8045','#7667ac'], offsets:[[-23,-10,10],[16,17,-11],[-12,20,6]]},
+  {name:'Deep Current', subtitle:'OCEAN SURVEY / FIELD NOTES', ink:['#337aab','#e26854','#429a8a'], offsets:[[22,-21,-12],[-18,16,9],[20,13,-6]]},
+  {name:'First Contact', subtitle:'OBSERVATORY / SIGNAL NO. 07', ink:['#6d5ba5','#e66d40','#329397'], offsets:[[-24,19,12],[20,-21,-13],[-17,-14,11]]}
+];
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const bounded = (value, limit) => Number.isFinite(value) ? clamp(value,-limit,limit) : 0;
+function profile(raw = {}) {
+  return {
+    done:JOBS.map((_,i)=>raw?.done?.[i]===true),
+    rewards:{like:raw?.rewards?.like===true,comment:raw?.rewards?.comment===true},
+    sound:raw?.sound!==false
+  };
+}
+function mergeProfile(local, remote) {
+  const a=profile(local), b=profile(remote);
+  return {...a,done:a.done.map((value,i)=>value||b.done[i]),
+    rewards:{like:a.rewards.like||b.rewards.like,comment:a.rewards.comment||b.rewards.comment}};
+}
+function unlocked(p, job) { return Number.isInteger(job)&&job>=0&&job<JOBS.length&&(job===0||p.done[job-1]); }
+function makeRun(job=0, layer=0) {
+  const [x,y,angle]=JOBS[job].offsets[layer];
+  return {job,layer,x,y,angle,guide:false,phase:'ready'};
+}
+function restore(raw, p) {
+  if (!raw || !unlocked(p,raw.job) || !Number.isInteger(raw.layer)) return makeRun();
+  const count=JOBS[raw.job].ink.length;
+  if(raw.phase==='won'&&raw.layer===count&&p.done[raw.job])
+    return {...makeRun(raw.job),layer:count,x:0,y:0,angle:0,phase:'won'};
+  if(raw.layer<0||raw.layer>=count||!['ready','active'].includes(raw.phase)) return makeRun(raw.job);
+  if(![raw.x,raw.y,raw.angle].every(Number.isFinite)) return makeRun(raw.job,raw.layer);
+  return {...makeRun(raw.job,raw.layer),x:bounded(raw.x,56),y:bounded(raw.y,56),angle:bounded(raw.angle,28),guide:raw.guide===true,phase:raw.phase};
+}
+function aligned(run) { return run.phase!=='won' && Math.hypot(run.x,run.y)<=2.5 && Math.abs(run.angle)<=1.05; }
+function accuracy(run) { return run.phase==='won'||aligned(run) ? 100 : clamp(Math.round(100-Math.hypot(run.x,run.y)*1.1-Math.abs(run.angle)*1.9),0,99); }
+function adjust(run, x, y, angle, host) {
+  if(run.phase==='won'||![x,y,angle].every(Number.isFinite)) return false;
+  x=bounded(x,56); y=bounded(y,56); angle=bounded(angle,28);
+  if(!JOBS[run.job].offsets[run.layer][2]) angle=0;
+  if(run.x===x&&run.y===y&&run.angle===angle) return false;
+  host?.start(); Object.assign(run,{x,y,angle,phase:'active'}); return true;
+}
+function printLayer(run, p, host) {
+  if(!aligned(run)) return null;
+  host?.start();
+  const layer=run.layer+1;
+  if(layer<JOBS[run.job].ink.length) return {...makeRun(run.job,layer),phase:'active',guide:run.guide};
+  p.done[run.job]=true;
+  host?.end();
+  return {...run,layer,x:0,y:0,angle:0,phase:'won'};
+}
+
+return {KEY,JOBS,profile,mergeProfile,unlocked,makeRun,restore,aligned,accuracy,adjust,printLayer};})();
+const Art=(()=>{
+const {JOBS}=C;
+
+const ellipse=(c,x,y,rx,ry)=>{c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill();};
+const polygon=(c,points)=>{c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();};
+const line=(c,points,width=1)=>{c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.lineWidth=width;c.stroke();};
+function ring(c,x,y,r,width){c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.lineWidth=width;c.stroke();}
+function cross(c,x,y){line(c,[[x-11,y],[x+11,y]],1.8);line(c,[[x,y-11],[x,y+11]],1.8);ring(c,x,y,5,1);}
+const marks=[[-151,-194],[151,-194],[-151,194],[151,194]];
+
+function ferry(c,i){
+  if(i===0){
+    polygon(c,[[-135,56],[131,56],[104,98],[-100,98]]);
+    c.fillRect(-93,18,164,38);c.fillRect(-38,-12,75,30);
+    polygon(c,[[-49,-12],[46,-12],[29,-22],[-32,-22]]);
+    for(let y=112;y<158;y+=12){
+      c.beginPath();c.moveTo(-142,y);
+      for(let x=-142;x<142;x+=35)c.quadraticCurveTo(x+17,y-8,x+35,y);
+      c.lineWidth=2;c.stroke();
+    }
+    line(c,[[-80,15],[-80,-31],[-64,-22]],2);
+    line(c,[[-32,-25],[-12,-40],[7,-25]],1.5);
+    line(c,[[-114,54],[-114,36],[-95,36]],2);
+    c.save();c.globalCompositeOperation='destination-out';
+    line(c,[[-119,62],[117,62]],1.4);
+    for(const x of [-25,-3,19])c.fillRect(x,-3,13,12);
+    line(c,[[-86,94],[88,94]],1);c.restore();
+  }else{
+    ellipse(c,54,-53,56,56);c.fillRect(-16,-41,18,25);
+    for(let x=-76;x<64;x+=24)c.fillRect(x,29,13,11);
+    for(let x=-86;x<96;x+=31)ellipse(c,x,74,3,3);
+    line(c,[[-113,108],[-52,108]],2);line(c,[[51,108],[118,108]],2);
+    for(const [x,y] of [[-97,-68],[-70,-84],[-42,-61]]){
+      c.beginPath();c.moveTo(x-8,y);c.quadraticCurveTo(x-3,y-5,x,y);
+      c.quadraticCurveTo(x+4,y-5,x+8,y);c.lineWidth=1.5;c.stroke();
+    }
+  }
+}
+function peaks(c,i){
+  if(i===0){
+    polygon(c,[[-143,65],[-75,-49],[-38,-12],[15,-104],[112,30],[143,13],[143,156],[-143,156]]);
+    c.save();c.globalCompositeOperation='destination-out';
+    polygon(c,[[-12,-58],[15,-104],[47,-55],[24,-62],[15,-50],[4,-67]]);c.restore();
+  }else{
+    ellipse(c,-71,-64,37,37);
+    polygon(c,[[-130,110],[-83,68],[10,68],[47,90],[47,113]]);
+    c.fillRect(-80,59,87,7);c.fillRect(54,92,73,21);
+    for(let x=-103;x<126;x+=22)ellipse(c,x,119,6,6);
+    line(c,[[-141,132],[141,132]],3);line(c,[[-141,142],[141,142]],1);
+  }
+}
+function jazz(c,i){
+  if(i===0){
+    ellipse(c,6,29,100,100);
+    c.save();c.globalCompositeOperation='destination-out';ring(c,6,29,82,2);ring(c,6,29,71,2);ring(c,6,29,59,2);ellipse(c,6,29,26,26);c.restore();
+    for(let x=-137;x<-84;x+=16)line(c,[[x,153],[x,117-(x+137)/2]],4);
+    for(let x=104;x<144;x+=13)line(c,[[x,-90],[x,-50-(x-104)]],3);
+  }else{
+    c.beginPath();c.moveTo(-99,83);c.bezierCurveTo(-56,127,-13,105,-7,56);
+    c.lineTo(5,-39);c.quadraticCurveTo(12,-78,58,-63);
+    c.lineTo(61,-49);c.quadraticCurveTo(25,-60,22,-32);
+    c.lineTo(15,70);c.bezierCurveTo(3,130,-53,150,-110,109);c.closePath();c.fill();
+    ellipse(c,-108,93,25,14);ellipse(c,6,29,18,18);
+    for(let y=-16;y<57;y+=20)ellipse(c,23,y,5,5);
+    for(const [x,y] of [[99,107],[-104,-56],[111,-28]]){line(c,[[x-12,y],[x+12,y]],2);line(c,[[x,y-12],[x,y+12]],2);}
+  }
+}
+function garden(c,i){
+  if(i===0){
+    line(c,[[-124,146],[-124,-25],[0,-104],[124,-25],[124,146],[-124,146]],3);
+    line(c,[[-124,-25],[124,-25]],2);line(c,[[0,-104],[0,146]],2);
+    for(const x of [-75,75])line(c,[[x,-25],[x,146]],1);
+    for(const [x,y,s] of [[-78,95,-1],[-37,65,1],[34,55,-1],[80,83,1]]){
+      line(c,[[x,130],[x,y-23]],3);c.save();c.translate(x+s*11,y);c.rotate(s*.65);ellipse(c,0,0,19,9);c.restore();
+    }
+  }else if(i===1){
+    for(const x of [-78,-37,34,80])polygon(c,[[x-15,117],[x+15,117],[x+10,141],[x-10,141]]);
+    for(const [x,y] of [[-77,63],[35,23]])for(let j=0;j<6;j++)ellipse(c,x+Math.cos(j)*10,y+Math.sin(j)*10,7,7);
+  }else{
+    for(const [x,y] of [[-37,42],[81,51]])for(let j=0;j<5;j++)ellipse(c,x+Math.cos(j*1.257)*9,y+Math.sin(j*1.257)*9,7,7);
+    ring(c,0,-53,18,2);line(c,[[-105,152],[105,152]],2);
+  }
+}
+function ocean(c,i){
+  if(i===0){
+    c.beginPath();c.moveTo(-110,41);c.bezierCurveTo(-63,-37,48,-63,107,15);c.quadraticCurveTo(136,41,96,73);c.bezierCurveTo(24,116,-53,97,-105,65);c.lineTo(-139,91);c.lineTo(-132,38);c.closePath();c.fill();
+    polygon(c,[[-3,87],[44,124],[49,87]]);
+  }else if(i===1){
+    ellipse(c,66,35,9,9);
+    for(const [x,y] of [[-109,-42],[117,-34],[101,129],[-88,116]]){ring(c,x,y,8,2);ring(c,x+12,y-13,3,1);}
+    line(c,[[71,63],[91,59]],2);
+  }else{
+    for(let y=-64;y<157;y+=27){
+      c.beginPath();c.moveTo(-143,y);c.bezierCurveTo(-62,y+16,50,y-18,143,y+3);c.lineWidth=1.5;c.stroke();
+    }
+  }
+}
+function signal(c,i){
+  if(i===0){
+    ellipse(c,19,-31,54,54);polygon(c,[[-142,146],[-90,74],[-55,109],[26,46],[92,103],[143,85],[143,156],[-142,156]]);
+  }else if(i===1){
+    c.save();c.translate(-48,27);c.rotate(-.7);
+    c.beginPath();c.ellipse(0,0,47,32,0,0,Math.PI);c.closePath();c.fill();
+    line(c,[[0,18],[0,-21],[15,-37]],3);ellipse(c,15,-37,4,4);c.restore();
+    line(c,[[-46,53],[-66,110],[-14,110],[-41,54]],5);
+  }else{
+    c.save();c.translate(19,-31);c.rotate(-.36);c.beginPath();c.ellipse(0,0,98,24,0,0,Math.PI*2);c.lineWidth=3;c.stroke();c.restore();
+    for(const [x,y] of [[-113,-54],[-54,-88],[107,-84],[120,30],[-115,12]]){line(c,[[x-5,y],[x+5,y]],2);line(c,[[x,y-5],[x,y+5]],2);}
+  }
+}
+const illustrations=[ferry,peaks,jazz,garden,ocean,signal];
+
+class Press {
+  constructor(canvas){
+    this.canvas=canvas;this.ctx=canvas.getContext('2d');this.films=new Map();
+    this.texture=document.createElement('canvas');this.texture.width=128;this.texture.height=128;
+    const g=this.texture.getContext('2d');
+    for(let i=0;i<1800;i++){g.fillStyle=i%2?'#fcf1c20e':'#302c1b0e';g.fillRect((i*47+i*i)%128,(i*71+i*i*3)%128,1+(i%3===0),1);}
+  }
+  film(job,index){
+    const key=job*4+index;
+    if(!this.films.has(key)){
+      const surface=document.createElement('canvas');surface.width=330;surface.height=348;
+      const g=surface.getContext('2d');g.translate(165,174);g.fillStyle=g.strokeStyle=JOBS[job].ink[index];
+      illustrations[job](g,index);this.films.set(key,surface);
+    }
+    return this.films.get(key);
+  }
+  draw(run,p,effect=0){
+    const c=this.ctx, job=JOBS[run.job];
+    c.setTransform(1,0,0,1,0,0);c.fillStyle='#263a30';c.fillRect(0,0,560,530);
+    const deck=c.createLinearGradient(0,0,0,530);deck.addColorStop(0,'#3f5646');deck.addColorStop(1,'#21332c');
+    c.fillStyle=deck;c.fillRect(12,30,536,479);
+    c.fillStyle=c.createPattern(this.texture,'repeat');c.fillRect(0,0,560,530);
+    const brass=p.rewards.like||p.done.filter(Boolean).length>=3;
+    c.fillStyle=brass?'#bd9861':'#728375';c.fillRect(43,55,13,423);c.fillRect(504,55,13,423);
+    for(let y=64;y<479;y+=13){c.fillStyle='#233a30';c.fillRect(46,y,y%5===0?9:5,1);c.fillRect(506,y,6,1);}
+    for(const x of [23,537])for(const y of [45,495]){c.fillStyle='#9da887';ellipse(c,x,y,5,5);c.strokeStyle='#29382e';line(c,[[x-3,y+2],[x+3,y-2]],1);}
+    c.save();c.translate(280,268);
+    c.shadowColor='#0c1c17a0';c.shadowBlur=15;c.shadowOffsetY=7;c.fillStyle='#f1e4bf';c.fillRect(-174,-213,348,426);c.shadowColor='transparent';
+    c.fillStyle=c.createPattern(this.texture,'repeat');c.fillRect(-174,-213,348,426);
+    c.strokeStyle='#9a856556';c.strokeRect(-160,-202,320,404);
+    c.textAlign='center';c.fillStyle='#334238';c.font='700 10px monospace';c.fillText(job.subtitle,0,-169);
+    c.font='bold 33px Georgia';c.fillText(job.name.toUpperCase(),0,-133);
+    c.font='700 9px monospace';c.fillText('ORIGINAL EDITION / POCKET PRINT SHOP',0,185);
+    if(run.guide&&run.phase!=='won'){
+      c.globalAlpha=.17;c.drawImage(this.film(run.job,run.layer),-165,-157);c.globalAlpha=1;
+    }
+    c.globalCompositeOperation='multiply';
+    for(let index=0;index<run.layer;index++)c.drawImage(this.film(run.job,index),-165,-157);
+    c.globalCompositeOperation='source-over';
+    if(run.phase!=='won'){
+      c.strokeStyle='#283b30';for(const [x,y] of marks)cross(c,x,y);
+      c.save();c.translate(run.x,run.y);c.rotate(run.angle*Math.PI/180);
+      c.fillStyle=job.ink[run.layer]+'10';c.fillRect(-164,-205,328,410);
+      c.strokeStyle=job.ink[run.layer];c.lineWidth=1.4;c.setLineDash([4,5]);c.strokeRect(-164,-205,328,410);c.setLineDash([]);
+      c.globalCompositeOperation='multiply';c.globalAlpha=.79;c.drawImage(this.film(run.job,run.layer),-165,-157);
+      c.globalAlpha=1;c.globalCompositeOperation='source-over';
+      for(const [x,y] of marks)cross(c,x,y);
+      c.restore();
+    }else{
+      c.fillStyle='#a4513c';c.font='800 9px monospace';c.textAlign='right';c.fillText('REGISTERED',151,195);
+    }
+    if(effect>0){
+      const y=202-404*effect;
+      const roller=c.createLinearGradient(0,y-14,0,y+14);roller.addColorStop(0,'#a5825d');roller.addColorStop(.45,'#f0c393');roller.addColorStop(1,'#624e42');
+      c.fillStyle=roller;c.fillRect(-183,y-11,366,22);
+      c.fillStyle='#3b4b40';c.fillRect(-193,y-4,386,8);
+      if(p.rewards.comment||p.done.filter(Boolean).length===6){
+        for(let i=0;i<20;i++){c.fillStyle=job.ink[i%job.ink.length];ellipse(c,Math.sin(i*2.4)*(183+16*(1-effect)),y+Math.cos(i*3.5)*25,3,2);}
+      }
+    }
+    c.restore();
+  }
+}
+
+
+return {Press};})();
+const SDK=(()=>{
+
+// Optional host integration. Gameplay never awaits SDK discovery or registration.
+function bridge({host=()=>globalThis.neonlib,read,write,changed=()=>{},schedule=setTimeout,cancel=clearTimeout,timeout=5000}){
+ const game='ink-register';let alive=true,epoch=0,sdk=null,started=false,ended=false,startHost=null,loadStarted=false,cloudReady=false,cloudBase={},dirty=false,saving=false,timers=new Set(),entries=new Map(),support={like:false,comment:false};
+ const later=(fn,ms)=>{let id=schedule(()=>{timers.delete(id);fn();},ms);timers.add(id);return id;};
+ const safeStop=fn=>{try{fn?.();}catch{}};
+ const getHost=()=>{try{let h=host();return h&&typeof h==='object'?h:null;}catch{return null;}};
+ const emit=e=>{if(alive)try{changed(e);}catch{}};
+ function call(h,name){try{if(typeof h?.[name]!=='function')return false;Promise.resolve(h[name]()).catch(()=>{});return true;}catch{return false;}}
+ function notifyStart(){if(started&&!ended&&sdk&&startHost!==sdk&&call(sdk,'gameStart'))startHost=sdk;}
+ function save(){dirty=true;flush();}
+ function flush(){
+  if(!alive||saving||!dirty||!cloudReady||typeof sdk?.saveUserGameState!=='function')return;
+  let snapshot;
+  try{snapshot={...cloudBase,game,v:1,profile:JSON.parse(JSON.stringify(read()))};}catch{return;}
+  dirty=false;
+  saving=true;
+  const destination=sdk,gen=epoch;
+  let settled=false, timedOut=false;
+  const timer=later(()=>{
+   if(!alive||gen!==epoch||settled)return;
+   timedOut=true;
+   cloudReady=false;
+   dirty=true;
+   emit({type:'cloudUnavailable'});
+  },timeout);
+  function finish(success){
+   if(settled)return;
+   settled=true;
+   cancel(timer);
+   timers.delete(timer);
+   if(!alive||gen!==epoch)return;
+   saving=false;
+   if(timedOut)cloudReady=true;
+   if(!success){dirty=true;return;}
+   emit({type:'saved'});
+   if(dirty)flush();
+  }
+  try{Promise.resolve(destination.saveUserGameState(snapshot)).then(result=>finish(result?.code===0),()=>finish(false));}
+  catch{finish(false);}
+ }
+ function reward(kind,e){if(!alive||!e||typeof e!=='object'||typeof e.project_id!=='string'||!e.project_id.trim()||kind==='like'&&e.status!==true||kind==='comment'&&typeof e.content!=='string')return;let p=read();if(p.rewards?.[kind])return;p.rewards={...p.rewards,[kind]:true};write(p,false);emit({type:'reward',kind});save();}
+ function reg(kind,name,attempt=0){if(!alive||entries.has(kind)||typeof sdk?.[name]!=='function')return;let gen=epoch,entry={live:false,expired:false,stop:null};entries.set(kind,entry);
+  let timer=later(()=>{if(!alive||gen!==epoch)return;entry.expired=true;if(attempt<1&&entries.get(kind)===entry)entries.delete(kind);support[kind]=false;emit({type:'support',...support});if(attempt<1)later(()=>reg(kind,name,attempt+1),1000);},timeout);
+  const callback=e=>{if(alive&&gen===epoch&&entry.live&&!entry.expired)reward(kind,e);};
+  const done=r=>{cancel(timer);timers.delete(timer);let stop=r?.code===0&&typeof r?.data?.unsubscribe==='function'?r.data.unsubscribe:null;if(!alive||gen!==epoch||entry.expired){safeStop(stop);return;}if(r?.code!==0){entry.expired=true;if(r?.code===-2&&attempt<1){entries.delete(kind);later(()=>reg(kind,name,attempt+1),1000);}return;}entry.live=true;entry.stop=stop;support[kind]=true;emit({type:'support',...support});};
+  try{Promise.resolve(sdk[name](callback)).then(done,()=>done(null));}catch{done(null);}
+ }
+ function recognized(raw){return !!raw&&typeof raw==='object'&&!Array.isArray(raw)&&raw.game===game&&raw.v===1&&raw.profile&&typeof raw.profile==='object'&&!Array.isArray(raw.profile);}
+ function connect(){if(!alive)return;let h=getHost();if(!h)return;if(sdk!==h){epoch++;for(let e of entries.values()){e.expired=true;safeStop(e.stop);}entries.clear();support={like:false,comment:false};cloudReady=false;loadStarted=false;cloudBase={};saving=false;sdk=h;emit({type:'connected'});}
+  if(!loadStarted&&typeof sdk.loadUserGameState==='function'){loadStarted=true;let gen=epoch,resolved=false;later(()=>{if(alive&&gen===epoch&&!resolved){resolved=true;cloudReady=false;emit({type:'cloudUnavailable'});}},timeout);
+   try{Promise.resolve(sdk.loadUserGameState()).then(raw=>{if(!alive||gen!==epoch||resolved)return;resolved=true;if(recognized(raw)){cloudBase=raw;write(raw.profile,true);emit({type:'cloud'});}cloudReady=recognized(raw)||!!raw&&typeof raw==='object'&&!Array.isArray(raw)&&Object.keys(raw).length===0;if(dirty)flush();},()=>{if(gen===epoch){resolved=true;cloudReady=false;}});}catch{resolved=true;cloudReady=false;}}
+  notifyStart();reg('like','onLike');reg('comment','onComment');if(dirty)flush();
+ }
+ function probe(n=0){connect();if(alive&&n<8)later(()=>probe(n+1),1500);}
+ function nudge(){connect();}const external=typeof globalThis.addEventListener==='function';if(external)for(let name of ['pointerdown','focus','resize'])globalThis.addEventListener(name,nudge,{passive:true});probe();
+ return{save,connect,support:()=>({...support}),prepare(){started=false;ended=false;startHost=null;},start(){if(started&&!ended)return;started=true;ended=false;connect();notifyStart();},end(){if(!started||ended)return;ended=true;call(sdk||startHost,'gameOver');},
+  viewport(){let h=getHost();try{let v=h?.getGameViewport?.();if(v&&typeof v.then==='function'){Promise.resolve(v).catch(()=>{});return null;}if(v&&Number.isFinite(v.width)&&Number.isFinite(v.height)&&v.width>0&&v.height>0)return{width:v.width,height:v.height,density:Number.isFinite(v.density)&&v.density>0?v.density:1};}catch{}return null;},
+  stop(){if(!alive)return;alive=false;epoch++;if(external)for(let name of ['pointerdown','focus','resize'])globalThis.removeEventListener(name,nudge);for(let t of timers)cancel(t);timers.clear();for(let e of entries.values()){e.expired=true;safeStop(e.stop);}entries.clear();support={like:false,comment:false};}
+ };
+}
+
+
+
+
+
+
+
+
+return {bridge};})();
+const {Press}=Art,{bridge}=SDK;
+
+const byId=id=>document.getElementById(id);
+let saved;
+try{saved=JSON.parse(localStorage.getItem(C.KEY)||'null');}catch{}
+let profile=C.profile(saved?.profile), run=C.restore(saved?.run,profile);
+let host, drag=null, printing=false, lastMark=-1, audio;
+const canvas=byId('press'), press=new Press(canvas), archive=byId('library');
+const printButton=byId('print'), moves=[...document.querySelectorAll('[data-move]')];
+const step={left:[-2,0,0],right:[2,0,0],up:[0,-2,0],down:[0,2,0],ccw:[0,0,-1],cw:[0,0,1]};
+
+function save(cloud=false){
+  try{localStorage.setItem(C.KEY,JSON.stringify({profile,run}));}catch{}
+  if(cloud)host?.save();
+}
+function connect(){
+  host=bridge({
+    read:()=>C.profile(profile),
+    write:(incoming,merge)=>{
+      profile=merge?C.mergeProfile(profile,incoming):C.profile(incoming);
+      save();refresh();if(archive.open)renderArchive();
+    },
+    changed:event=>{
+      if(event.type==='support'&&archive.open)renderArchive();
+      if(event.type==='reward')byId('notice').textContent=event.kind==='like'?'Brass rails unlocked':'Ink confetti unlocked';
+    }
+  });
+}
+function sound(notes){
+  if(!profile.sound)return;
+  try{
+    audio??=new (window.AudioContext||window.webkitAudioContext)();
+    audio.resume().catch(()=>{});
+    for(const [i,frequency] of notes.entries()){
+      const oscillator=audio.createOscillator(), gain=audio.createGain(), time=audio.currentTime+i*.065;
+      oscillator.type='sine';oscillator.frequency.value=frequency;
+      gain.gain.setValueAtTime(.085,time);gain.gain.exponentialRampToValueAtTime(.001,time+.14);
+      oscillator.connect(gain).connect(audio.destination);oscillator.start(time);oscillator.stop(time+.15);
+    }
+  }catch{}
+}
+function refresh(draw=true){
+  const job=C.JOBS[run.job], won=run.phase==='won', ready=C.aligned(run), count=profile.done.filter(Boolean).length;
+  byId('edition').textContent='EDITION '+String(run.job+1).padStart(2,'0')+' / 06';
+  byId('job').textContent=job.name;
+  byId('film').textContent=won?'SIGNED & PRINTED':'FILM '+(run.layer+1)+' / '+job.ink.length;
+  byId('accuracy').textContent=C.accuracy(run)+'%';
+  byId('count').textContent=count+' / 6 EDITIONS PRINTED';
+  byId('sound').textContent=profile.sound?'Sound on':'Sound off';
+  byId('guide').setAttribute('aria-pressed',String(run.guide));
+  byId('guide').disabled=printing||won;
+  byId('reset').disabled=printing;byId('archive').disabled=printing;
+  printButton.disabled=printing||(!won&&!ready);
+  printButton.textContent=printing?'Printing…':won?(run.job<C.JOBS.length-1?'Next edition':'Print archive'):'Pull print';
+  for(const button of moves)button.disabled=printing||won||(button.dataset.move.startsWith('c')&&!job.offsets[run.layer]?.[2]);
+  const instruction=ready?'Marks registered. Pull the print.':job.offsets[run.layer]?.[2]?'Drag to shift. Use ↶ / ↷ to turn the film.':'Drag the film until the crosshairs overlap.';
+  let tip=instruction;
+  if(run.guide&&!ready&&!won){
+    const direction=[Math.abs(run.x)>1?'←→ '+Math.abs(run.x).toFixed(1)+' '+(run.x>0?'left':'right'):'',Math.abs(run.y)>1?'↑↓ '+Math.abs(run.y).toFixed(1)+' '+(run.y>0?'up':'down'):'',Math.abs(run.angle)>1?Math.abs(run.angle).toFixed(1)+'° '+(run.angle>0?'↶':'↷'):''].filter(Boolean);
+    if(direction.length)tip=direction.join('  ·  ');
+  }
+  byId('tip').textContent=won?'Edition complete. Find your finished prints in the archive.':tip;
+  document.body.classList.toggle('brass',profile.rewards.like||count>=3);
+  if(draw&&!printing)press.draw(run,profile);
+}
+function change(x,y,angle){
+  if(printing||archive.open)return;
+  const before=C.aligned(run);
+  if(!C.adjust(run,x,y,angle,host))return;
+  save();refresh();
+  if(C.aligned(run)&&!before){sound([740,990]);byId('notice').textContent='REGISTERED';}
+  else if(!C.aligned(run)){byId('notice').textContent='';const mark=Math.floor(C.accuracy(run)/10);if(mark>lastMark&&mark>=8)sound([440+mark*20]);lastMark=mark;}
+}
+function nudge(action){const delta=step[action];if(delta)change(run.x+delta[0],run.y+delta[1],run.angle+delta[2]);}
+function selectJob(job, preview=false){
+  if(printing||!C.unlocked(profile,job))return;
+  host?.end();host?.prepare();run=C.makeRun(job);
+  if(preview&&profile.done[job]){
+    run={...run,layer:C.JOBS[job].ink.length,x:0,y:0,angle:0,phase:'won'};
+  }
+  lastMark=-1;byId('notice').textContent='';save();refresh();
+}
+function renderArchive(){
+  const list=byId('editions');list.replaceChildren();
+  C.JOBS.forEach((job,i)=>{
+    const button=document.createElement('button'), label=document.createElement('small');
+    label.textContent=profile.done[i]?'PRINTED':C.unlocked(profile,i)?'AVAILABLE':'LOCKED';
+    button.append(label,job.name);button.disabled=!C.unlocked(profile,i);
+    button.onclick=()=>{archive.close();if(i!==run.job)selectJob(i,true);};list.append(button);
+  });
+  const support=host?.support()||{};
+  const perks=[];
+  if(support.like)perks.push(profile.rewards.like?'Brass rails unlocked.':'Optional: like this game in GameWave for brass rails. Also earned after 3 editions.');
+  if(support.comment)perks.push(profile.rewards.comment?'Ink confetti unlocked.':'Optional: leave a direct GameWave comment for ink confetti. Also earned after 6 editions.');
+  const rewards=byId('hostRewards');rewards.hidden=!perks.length;rewards.textContent=perks.join(' ');
+}
+function showArchive(){if(!printing&&!archive.open){renderArchive();archive.showModal();}}
+function pull(){
+  if(printing)return;
+  if(run.phase==='won'){
+    if(run.job<C.JOBS.length-1)selectJob(run.job+1);else showArchive();
+    return;
+  }
+  const result=C.printLayer(run,profile,host);
+  if(!result)return;
+  const printed={...result,layer:run.layer+1,phase:'won'};
+  run=result;printing=true;drag=null;save(true);refresh(false);
+  sound(run.phase==='won'?[392,523,659,784]:[294,440,587]);
+  const start=performance.now();
+  const animate=now=>{
+    const progress=Math.min(1,(now-start)/430);
+    if(progress<1){press.draw(printed,profile,Math.max(.001,progress));requestAnimationFrame(animate);}
+    else{printing=false;byId('notice').textContent=run.phase==='won'?'EDITION PRINTED':'LAYER PRINTED';refresh();}
+  };
+  requestAnimationFrame(animate);
+}
+canvas.addEventListener('pointerdown',event=>{
+  if(printing||run.phase==='won'||drag||event.button!==0)return;
+  const box=canvas.getBoundingClientRect();
+  drag={id:event.pointerId,clientX:event.clientX,clientY:event.clientY,x:run.x,y:run.y,angle:run.angle,scaleX:560/box.width,scaleY:530/box.height};
+  canvas.setPointerCapture(event.pointerId);
+});
+canvas.addEventListener('pointermove',event=>{
+  if(drag?.id!==event.pointerId)return;
+  change(drag.x+(event.clientX-drag.clientX)*drag.scaleX,drag.y+(event.clientY-drag.clientY)*drag.scaleY,drag.angle);
+});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,e=>{if(drag?.id===e.pointerId)drag=null;});
+moves.forEach(button=>button.onclick=()=>nudge(button.dataset.move));
+printButton.onclick=pull;
+byId('guide').onclick=()=>{run.guide=!run.guide;save();refresh();};
+byId('sound').onclick=()=>{profile.sound=!profile.sound;save();refresh();if(profile.sound)sound([440]);};
+byId('reset').onclick=()=>selectJob(run.job);
+byId('archive').onclick=showArchive;byId('closeArchive').onclick=()=>archive.close();
+addEventListener('keydown',event=>{
+  if(archive.open||event.altKey||event.ctrlKey||event.metaKey||printing)return;
+  const action={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',q:'ccw',e:'cw'}[event.key];
+  if(action){event.preventDefault();nudge(action);}
+});
+addEventListener('pagehide',()=>{save();host?.stop();});
+addEventListener('pageshow',event=>{if(event.persisted)connect();});
+connect();refresh();
+
+})();</script>
+</body></html>

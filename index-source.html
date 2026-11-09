@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#162822"><meta name="description" content="Register the ink layers and pull six hand-illustrated prints.">
+  <title>Ink Register · The Pocket Print Shop</title><link rel="icon" href="icon.svg"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="shop" aria-label="Ink Register">
+  <header><div class="brand"><svg viewBox="0 0 36 36" aria-hidden="true"><path fill="#d9985c" d="M5 8h19v19H5z"/><path fill="#ede1bd" d="M11 4h20v19H11z"/><path stroke="#17382d" stroke-width="2" fill="none" d="M16 13h10m-5-5v10"/></svg><div><span>THE POCKET PRINT SHOP</span><h1>INK REGISTER</h1></div></div><button id="sound" aria-label="Toggle sound">Sound on</button></header>
+  <section class="ticket"><div><small id="edition">EDITION 01 / 06</small><h2 id="job">Night Ferry</h2></div><button id="archive">Print archive</button></section>
+  <div class="frame">
+    <canvas id="press" width="560" height="530" aria-label="Drag the colored film to align its marks with the paper."></canvas>
+    <div class="readout"><span id="film">FILM 1 / 2</span><strong id="accuracy">72%</strong></div>
+    <p id="notice" role="status" aria-live="polite"></p>
+  </div>
+  <section class="console">
+    <p id="tip">Drag the film until the crosshairs overlap.</p>
+    <div class="control-row" id="controls">
+      <button data-move="left" aria-label="Shift left">←</button><button data-move="up" aria-label="Shift up">↑</button>
+      <button data-move="down" aria-label="Shift down">↓</button><button data-move="right" aria-label="Shift right">→</button>
+      <button data-move="ccw" aria-label="Rotate counterclockwise">↶</button><button data-move="cw" aria-label="Rotate clockwise">↷</button>
+    </div>
+    <div class="actions"><button id="guide" aria-pressed="false">Guide</button><button id="print" class="primary">Pull print</button><button id="reset" aria-label="Restart edition">Reset</button></div>
+  </section>
+  <footer><span id="count">0 / 6 EDITIONS PRINTED</span><span>EST. 1974</span></footer>
+</main>
+<dialog id="library" aria-labelledby="libraryTitle"><div class="dialog-head"><h2 id="libraryTitle">Print archive</h2><button id="closeArchive" aria-label="Close archive">✕</button></div><div id="editions"></div><p id="hostRewards" hidden></p></dialog>
+<script type="module" src="app.mjs"></script>
+</body></html>
